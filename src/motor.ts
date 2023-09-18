@@ -1,10 +1,17 @@
-import { Mensajes } from "./modelo";
-import { pideCarta, showMessage } from "./ui";
+import { Mensajes, score } from "./modelo";
+import {
+  botonReset,
+  botonWhatHappen,
+  botonesJugar,
+  muestraPuntuacion,
+  pintarCarta,
+  showMessage,
+} from "./ui";
 
 export function dameCarta() {
   let newCard: number = Math.floor(Math.random() * 10) + 1;
   if (newCard > 7) newCard = newCard + 2;
-  pideCarta(newCard);
+  return newCard;
 }
 
 export function mostrarCarta(carta: number) {
@@ -70,16 +77,62 @@ export function mostrarCarta(carta: number) {
   return card;
 }
 
-export const plantarse = (score: number): void => {
+export const plantarse = (): void => {
+  showMessage(seleccionMensaje());
+  botonReset();
+  botonWhatHappen();
+};
+
+export const empezarNuevo = (): void => {
+  score.puntos = 0;
+  pintarCarta(score.puntos);
+  showMessage("");
+  muestraPuntuacion(score.puntos);
+  botonesJugar();
+};
+
+export function seleccionMensaje(): string {
   let mensaje = "";
-  if (score <= 4) {
+  if (score.puntos <= 4) {
     mensaje = Mensajes.LESS_FOUR;
-  } else if (score === 5) {
+  } else if (score.puntos === 5) {
     mensaje = Mensajes.EQUAL_FIVE;
-  } else if (score === 7.5) {
+  } else if (score.puntos === 7.5) {
     mensaje = Mensajes.EQUAL_SEVEN_HALF;
-  } else if (score > 5) {
+  } else if (score.puntos > 5 && score.puntos <= 7) {
     mensaje = Mensajes.LESS_SEVEN;
+  } else {
+    mensaje = Mensajes.GAME_OVER;
   }
-  showMessage(mensaje);
+  return mensaje;
+}
+
+export function obtenerValorCarta(carta: number): number {
+  let puntuacion: number;
+  if (carta === 1) {
+    puntuacion = 1;
+  } else if (carta === 10 || carta === 11 || carta === 12) {
+    puntuacion = 0.5;
+  } else {
+    puntuacion = carta;
+  }
+  return puntuacion;
+}
+
+export const revisarPartida = (jugando: boolean): void => {
+  if (score.puntos > 7.5 && jugando) {
+    showMessage(seleccionMensaje());
+    botonReset();
+  }
+  if (!jugando) {
+    showMessage("Esta puntuación habrias sacado si hubieras seguido jugando");
+  }
+};
+
+export const pideCarta = (jugando: boolean): void => {
+  const carta: number = dameCarta();
+  pintarCarta(carta);
+  score.puntos = score.puntos + obtenerValorCarta(carta);
+  muestraPuntuacion(score.puntos);
+  revisarPartida(jugando);
 };
