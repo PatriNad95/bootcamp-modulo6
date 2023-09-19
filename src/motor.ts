@@ -1,17 +1,24 @@
 import { Mensajes, score } from "./modelo";
 import {
-  botonReset,
-  botonWhatHappen,
-  botonesJugar,
+  buttonAskShow,
+  buttonNoMoreCards,
+  buttonStartAgain,
+  buttonWhatWouldHappen,
   muestraPuntuacion,
   pintarCarta,
   showMessage,
 } from "./ui";
 
-export function dameCarta() {
-  let newCard: number = Math.floor(Math.random() * 10) + 1;
-  if (newCard > 7) newCard = newCard + 2;
-  return newCard;
+function dameCarta() {
+  let newCard: number = obtenerValorAleatorio();
+  pintarCarta(newCard);
+  const valorRealCarta: number = obtenerValorCarta(newCard);
+  return valorRealCarta;
+}
+
+function obtenerValorAleatorio() {
+  const valorAleatorio: number = Math.floor(Math.random() * 10) + 1;
+  return valorAleatorio > 7 ? valorAleatorio + 2 : valorAleatorio;
 }
 
 export function mostrarCarta(carta: number) {
@@ -78,18 +85,32 @@ export function mostrarCarta(carta: number) {
 }
 
 export const plantarse = (): void => {
-  showMessage(seleccionMensaje());
-  botonReset();
-  botonWhatHappen();
+  finalPartidas();
+  buttonWhatWouldHappen(false);
 };
 
 export const empezarNuevo = (): void => {
-  score.puntos = 0;
-  pintarCarta(score.puntos);
-  showMessage("");
-  muestraPuntuacion(score.puntos);
-  botonesJugar();
+  initEvents();
 };
+
+export const pideCarta = (): void => {
+  calcularCartaYPuntuacion();
+  revisarPartida();
+};
+
+function finalPartidas() {
+  const mensajeAMostrar: string = seleccionMensaje();
+  showMessage(mensajeAMostrar);
+  botonReset();
+}
+
+export function initEvents() {
+  score.puntos = 0;
+  pintarCarta(0);
+  showMessage("");
+  muestraPuntuacion(0);
+  botonesJugar();
+}
 
 export function seleccionMensaje(): string {
   let mensaje = "";
@@ -107,32 +128,41 @@ export function seleccionMensaje(): string {
   return mensaje;
 }
 
-export function obtenerValorCarta(carta: number): number {
-  let puntuacion: number;
-  if (carta === 1) {
-    puntuacion = 1;
-  } else if (carta === 10 || carta === 11 || carta === 12) {
-    puntuacion = 0.5;
-  } else {
-    puntuacion = carta;
-  }
-  return puntuacion;
+function obtenerValorCarta(carta: number): number {
+  return carta <= 7 ? carta : 0.5;
 }
 
-export const revisarPartida = (jugando: boolean): void => {
-  if (score.puntos > 7.5 && jugando) {
-    showMessage(seleccionMensaje());
-    botonReset();
-  }
-  if (!jugando) {
-    showMessage("Esta puntuación habrias sacado si hubieras seguido jugando");
+export const queHubieraPasado = (): void => {
+  calcularCartaYPuntuacion();
+  showMessage("Esta puntuación habrias sacado si hubieras seguido jugando");
+  botonReset();
+};
+
+function calcularCartaYPuntuacion() {
+  const carta: number = dameCarta();
+  sumarPuntuacion(carta);
+  muestraPuntuacion(score.puntos);
+}
+
+const revisarPartida = (): void => {
+  if (score.puntos > 7.5 || score.puntos === 7.5) {
+    finalPartidas();
   }
 };
 
-export const pideCarta = (jugando: boolean): void => {
-  const carta: number = dameCarta();
-  pintarCarta(carta);
-  score.puntos = score.puntos + obtenerValorCarta(carta);
-  muestraPuntuacion(score.puntos);
-  revisarPartida(jugando);
-};
+function botonesJugar(): void {
+  buttonAskShow(false);
+  buttonNoMoreCards(false);
+  buttonStartAgain(true);
+  buttonWhatWouldHappen(true);
+}
+
+function botonReset(): void {
+  buttonAskShow(true);
+  buttonNoMoreCards(true);
+  buttonStartAgain(false);
+}
+
+function sumarPuntuacion(carta: number): void {
+  score.puntos = score.puntos + carta;
+}

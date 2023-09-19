@@ -14,8 +14,14 @@ const whatWouldHappen = document.getElementById("whatWouldHappen");
 
 export function muestraPuntuacion(puntuacion: number) {
   const score = document.getElementById("score");
-  if (score !== null && score !== undefined) {
+  if (
+    score !== null &&
+    score !== undefined &&
+    score instanceof HTMLHeadingElement
+  ) {
     score.innerHTML = puntuacion.toString();
+  } else {
+    console.error("El elemento con id score no es un elemento h1");
   }
 }
 
@@ -26,76 +32,69 @@ export function pintarCarta(carta: number): void {
     newCardShown instanceof HTMLImageElement
   ) {
     newCardShown.src = mostrarCarta(carta);
+  } else {
+    console.error("El elemento con id newCardShown no es un elemento image");
   }
 }
 
-export function showMessage(mensaje: string) {
-  if (message !== null && message !== undefined) {
+export function showMessage(mensaje: string): void {
+  if (
+    message !== null &&
+    message !== undefined &&
+    message instanceof HTMLElement
+  ) {
     message.innerHTML = mensaje;
+  } else {
+    console.error("El elemento con id message no es un elemento HTML");
   }
 }
 
-export function botonWhatHappen(): void {
-  if (
-    whatWouldHappen !== null &&
-    whatWouldHappen !== undefined &&
-    whatWouldHappen instanceof HTMLButtonElement
-  ) {
-    whatWouldHappen.hidden = false;
-  }
-}
-
-export function botonesJugar(): void {
-  if (
-    buttonAsk !== null &&
-    buttonAsk !== undefined &&
-    buttonAsk instanceof HTMLButtonElement
-  ) {
-    buttonAsk.hidden = false;
-  }
-  if (
-    noMoreCards !== null &&
-    noMoreCards !== undefined &&
-    noMoreCards instanceof HTMLButtonElement
-  ) {
-    noMoreCards.hidden = false;
-  }
+export function buttonStartAgain(mostrar: boolean) {
   if (
     startAgain !== null &&
     startAgain !== undefined &&
     startAgain instanceof HTMLButtonElement
   ) {
-    startAgain.hidden = true;
-  }
-  if (
-    whatWouldHappen !== null &&
-    whatWouldHappen !== undefined &&
-    whatWouldHappen instanceof HTMLButtonElement
-  ) {
-    whatWouldHappen.hidden = true;
+    startAgain.hidden = mostrar;
+  } else {
+    console.error("El elemento con id startAgain no es un elemento button");
   }
 }
 
-export function botonReset(): void {
-  if (
-    buttonAsk !== null &&
-    buttonAsk !== undefined &&
-    buttonAsk instanceof HTMLButtonElement
-  ) {
-    buttonAsk.hidden = true;
-  }
+export function buttonNoMoreCards(mostrar: boolean) {
   if (
     noMoreCards !== null &&
     noMoreCards !== undefined &&
     noMoreCards instanceof HTMLButtonElement
   ) {
-    noMoreCards.hidden = true;
+    noMoreCards.hidden = mostrar;
+  } else {
+    console.error("El elemento con id noMoreCards no es un elemento button");
   }
+}
+
+export function buttonAskShow(mostrar: boolean) {
   if (
-    startAgain !== null &&
-    startAgain !== undefined &&
-    startAgain instanceof HTMLButtonElement
+    buttonAsk !== null &&
+    buttonAsk !== undefined &&
+    buttonAsk instanceof HTMLButtonElement
   ) {
-    startAgain.hidden = false;
+    buttonAsk.hidden = mostrar;
+  } else {
+    console.error("El elemento con id buttonAsk no es un elemento button");
+  }
+}
+
+export function buttonWhatWouldHappen(mostrar: boolean) {
+  if (
+    whatWouldHappen !== null &&
+    whatWouldHappen !== undefined &&
+    whatWouldHappen instanceof HTMLButtonElement
+  ) {
+    whatWouldHappen.hidden = mostrar;
+  } else {
+    console.error(
+      "El elemento con id whatWouldHappen no es un elemento button"
+    );
   }
 }
