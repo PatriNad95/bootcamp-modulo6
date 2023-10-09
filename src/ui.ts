@@ -1,31 +1,21 @@
+import { score } from "./modelo";
 import { mostrarCarta } from "./motor";
 
-const buttonAsk = document.getElementById("askCard");
-
-const noMoreCards = document.getElementById("noMoreCards");
-
-const message = document.getElementById("message");
-
-const startAgain = document.getElementById("startAgain");
-
-const newCardShown = document.getElementById("card");
-
-const whatWouldHappen = document.getElementById("whatWouldHappen");
-
-export function muestraPuntuacion(puntuacion: number) {
-  const score = document.getElementById("score");
+export function muestraPuntuacion() {
+  const scoreHtml = document.getElementById("score");
   if (
-    score !== null &&
-    score !== undefined &&
-    score instanceof HTMLHeadingElement
+    scoreHtml !== null &&
+    scoreHtml !== undefined &&
+    scoreHtml instanceof HTMLHeadingElement
   ) {
-    score.innerHTML = puntuacion.toString();
+    scoreHtml.innerHTML = score.puntos.toString();
   } else {
     console.error("El elemento con id score no es un elemento h1");
   }
 }
 
 export function pintarCarta(carta: number): void {
+  const newCardShown = document.getElementById("card");
   if (
     newCardShown !== null &&
     newCardShown !== undefined &&
@@ -38,6 +28,7 @@ export function pintarCarta(carta: number): void {
 }
 
 export function showMessage(mensaje: string): void {
+  const message = document.getElementById("message");
   if (
     message !== null &&
     message !== undefined &&
@@ -50,6 +41,7 @@ export function showMessage(mensaje: string): void {
 }
 
 export function buttonStartAgain(mostrar: boolean) {
+  const startAgain = document.getElementById("startAgain");
   if (
     startAgain !== null &&
     startAgain !== undefined &&
@@ -62,6 +54,7 @@ export function buttonStartAgain(mostrar: boolean) {
 }
 
 export function buttonNoMoreCards(mostrar: boolean) {
+  const noMoreCards = document.getElementById("noMoreCards");
   if (
     noMoreCards !== null &&
     noMoreCards !== undefined &&
@@ -74,6 +67,7 @@ export function buttonNoMoreCards(mostrar: boolean) {
 }
 
 export function buttonAskShow(mostrar: boolean) {
+  const buttonAsk = document.getElementById("askCard");
   if (
     buttonAsk !== null &&
     buttonAsk !== undefined &&
@@ -86,6 +80,7 @@ export function buttonAskShow(mostrar: boolean) {
 }
 
 export function buttonWhatWouldHappen(mostrar: boolean) {
+  const whatWouldHappen = document.getElementById("whatWouldHappen");
   if (
     whatWouldHappen !== null &&
     whatWouldHappen !== undefined &&

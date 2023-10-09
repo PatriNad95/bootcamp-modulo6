@@ -9,16 +9,9 @@ import {
   showMessage,
 } from "./ui";
 
-function dameCarta() {
-  let newCard: number = obtenerValorAleatorio();
-  pintarCarta(newCard);
-  const valorRealCarta: number = obtenerValorCarta(newCard);
-  return valorRealCarta;
-}
-
 function obtenerValorAleatorio() {
   const valorAleatorio: number = Math.floor(Math.random() * 10) + 1;
-  return valorAleatorio > 7 ? valorAleatorio + 2 : valorAleatorio;
+  return valorAleatorio;
 }
 
 export function mostrarCarta(carta: number) {
@@ -85,7 +78,9 @@ export function mostrarCarta(carta: number) {
 }
 
 export const plantarse = (): void => {
-  finalPartidas();
+  const mensajeAMostrar: string = seleccionMensaje();
+  showMessage(mensajeAMostrar);
+  botonReset();
   buttonWhatWouldHappen(false);
 };
 
@@ -94,21 +89,20 @@ export const empezarNuevo = (): void => {
 };
 
 export const pideCarta = (): void => {
-  calcularCartaYPuntuacion();
+  const valorAleatorio: number = obtenerValorAleatorio();
+  const valorRealCarta: number = calcularCarta(valorAleatorio);
+  pintarCarta(valorRealCarta);
+  const puntos: number = obtenerPuntosCarta(valorRealCarta);
+  sumarPuntuacion(puntos);
+  muestraPuntuacion();
   revisarPartida();
 };
-
-function finalPartidas() {
-  const mensajeAMostrar: string = seleccionMensaje();
-  showMessage(mensajeAMostrar);
-  botonReset();
-}
 
 export function initEvents() {
   score.puntos = 0;
   pintarCarta(0);
   showMessage("");
-  muestraPuntuacion(0);
+  muestraPuntuacion();
   botonesJugar();
 }
 
@@ -128,27 +122,42 @@ export function seleccionMensaje(): string {
   return mensaje;
 }
 
-function obtenerValorCarta(carta: number): number {
-  return carta <= 7 ? carta : 0.5;
-}
-
 export const queHubieraPasado = (): void => {
-  calcularCartaYPuntuacion();
+  const valorAleatorio: number = obtenerValorAleatorio();
+  const valorRealCarta: number = calcularCarta(valorAleatorio);
+  pintarCarta(valorRealCarta);
+  const puntos: number = obtenerPuntosCarta(valorRealCarta);
+  sumarPuntuacion(puntos);
+  muestraPuntuacion();
   showMessage("Esta puntuación habrias sacado si hubieras seguido jugando");
   botonReset();
+  buttonWhatWouldHappen(true);
 };
 
-function calcularCartaYPuntuacion() {
-  const carta: number = dameCarta();
-  sumarPuntuacion(carta);
-  muestraPuntuacion(score.puntos);
+function calcularCarta(valorRealCarta: number): number {
+  return valorRealCarta > 7 ? valorRealCarta + 2 : valorRealCarta;
 }
 
 const revisarPartida = (): void => {
-  if (score.puntos > 7.5 || score.puntos === 7.5) {
-    finalPartidas();
+  if (score.puntos === 7.5) {
+    ganarPartida();
+  }
+  if (score.puntos > 7.5) {
+    perderPartida();
   }
 };
+
+function ganarPartida() {
+  const mensajeAMostrar: string = seleccionMensaje();
+  showMessage(mensajeAMostrar);
+  botonReset();
+}
+
+function perderPartida() {
+  const mensajeAMostrar: string = seleccionMensaje();
+  showMessage(mensajeAMostrar);
+  botonReset();
+}
 
 function botonesJugar(): void {
   buttonAskShow(false);
@@ -161,6 +170,10 @@ function botonReset(): void {
   buttonAskShow(true);
   buttonNoMoreCards(true);
   buttonStartAgain(false);
+}
+
+function obtenerPuntosCarta(carta: number): number {
+  return carta <= 7 ? carta : 0.5;
 }
 
 function sumarPuntuacion(carta: number): void {
